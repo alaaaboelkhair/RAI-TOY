@@ -1,0 +1,35 @@
+# Credentials and local connection settings
+raiconfig.yaml
+raiconfig.yml
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p8
+
+# Environments, caches, generated deployment state and logs
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.rai/
+build/
+shared_model.py
+shared_model.py.*.bak
+.DS_Store
+*.log
+.aws/
+.codex/
+.agents/
+
+# Publish only the current purchasing demo and its synthetic artifacts
+legacy/
+optimize_replenishment.py
+replenishment_model.py
+seed_supply_chain.py
+data/*
+!data/smb_*.csv
+!data/smb_*.json
+!data/smb_*.txt
