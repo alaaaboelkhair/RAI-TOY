@@ -1,0 +1,43 @@
+[UnhandledApiAttribute] CreateThreadResponse received unhandled attribute(s): external_id. The full REST payload is available on raw_payload.
+
+
+**This is a synthetic demo scenario** (30 products, 4 suppliers, snapshot Oct 12 – Nov 11, 2026). All data below is from the precomputed RelationalAI purchasing model.
+
+---
+
+### Optimized Plan vs. Lowest-Landed-Price-First Baseline
+
+| Metric | Optimized Plan | Baseline (Price-First) |
+|---|---|---|
+| **Total cost** | **$36,922.00** | **$38,227.12** |
+| Purchased pieces | 3,226 | 3,366 |
+| Excess pieces (above need) | 146 | 286 |
+| Demand shortfall | 49 pieces | 49 pieces |
+| Safety-stock shortfall | 15 pieces | 15 pieces |
+| Solver / strategy status | OPTIMAL | FEASIBLE AT MAX COVERAGE |
+
+### Savings
+
+| | |
+|---|---|
+| **Dollar savings** | **$1,305.12** |
+| **Savings percentage** | **3.41%** of baseline cost |
+| Products with savings | 17 of 30 |
+
+### Shortfalls match
+
+Both strategies produce **identical** demand shortfall (49 pieces) and safety-stock shortfall (15 pieces). This is expected — both use the same eligible supplier offers, capacity limits, arrival windows, and per-product coverage ceiling. The shortfalls are driven by supply constraints (capacity, lead time, eligibility), not by ordering strategy.
+
+---
+
+### Why can "cheapest unit price first" cost more overall?
+
+Each product is independent in this formulation, so the answer lies in **pack sizing and minimum-order quantities (MOQ) within each product**:
+
+1. **Pack rounding waste.** A cheaper-per-piece supplier may sell in larger packs. Buying from that supplier can force you to purchase more pieces than needed, and the excess units drive up the total spend even though the rate is low. The optimizer can sometimes pick a slightly higher per-piece price with a smaller pack that lands closer to the exact need — spending less in total.
+
+2. **MOQ overshoot.** The cheapest offer may carry a high minimum order. If the remaining need is small, the baseline is forced to buy far above need at that supplier, adding cost the optimizer avoids by choosing a different offer with a better-fitting MOQ.
+
+3. **Capacity splits.** When the cheapest supplier's capacity can't fill the entire need, the baseline moves to the next-cheapest offer for the remainder — but that second offer may also force pack-rounding waste. The optimizer evaluates all feasible offer combinations simultaneously and can find a split that wastes fewer pieces overall.
+
+In this scenario, the baseline buys **140 more pieces** than the optimizer (3,366 vs. 3,226), producing **140 extra excess pieces** (286 vs. 146) — a clear sign of pack-rounding and MOQ overshoot adding unnecessary cost across 17 products.

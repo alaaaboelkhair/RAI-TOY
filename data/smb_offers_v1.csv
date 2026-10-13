@@ -1,0 +1,91 @@
+OFFER_ID,PRODUCT_ID,SUPPLIER_ID,UNIT_COST_CENTS,FREIGHT_CENTS_PER_UNIT,CURRENCY,PACK_SIZE,MINIMUM_ORDER_QTY,CONFIRMED_CAPACITY_QTY,LEAD_TIME_DAYS,EXPECTED_ARRIVAL_DATE,IS_APPROVED,ELIGIBLE_PACKS,ELIGIBILITY_REASON,IS_SYNTHETIC,SCENARIO_ID,SNAPSHOT_DATE
+1,1,1,280,25,USD,6,24,91,12,2026-10-24,1,15,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+2,1,2,180,25,USD,12,48,122,22,2026-11-03,1,10,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+3,1,4,150,25,USD,5,20,184,35,2026-11-16,1,0,arrives after planning window,1,smb_purchasing_20261012_v1,2026-10-12
+4,2,1,351,25,USD,6,24,110,40,2026-11-21,1,0,arrives after planning window,1,smb_purchasing_20261012_v1,2026-10-12
+5,2,3,491,60,USD,10,10,172,40,2026-11-21,1,0,arrives after planning window,1,smb_purchasing_20261012_v1,2026-10-12
+6,2,4,221,25,USD,5,20,203,40,2026-11-21,1,0,arrives after planning window,1,smb_purchasing_20261012_v1,2026-10-12
+7,3,1,422,25,USD,6,24,129,-1,,1,0,missing lead time,1,smb_purchasing_20261012_v1,2026-10-12
+8,3,2,322,25,USD,12,48,160,22,2026-11-03,1,13,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+9,3,3,562,60,USD,10,10,191,4,2026-10-16,1,19,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+10,4,1,493,25,USD,6,24,148,12,2026-10-24,1,24,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+11,4,2,393,25,USD,12,48,179,22,2026-11-03,0,0,not approved,1,smb_purchasing_20261012_v1,2026-10-12
+12,4,4,363,25,USD,5,20,61,35,2026-11-16,1,0,arrives after planning window,1,smb_purchasing_20261012_v1,2026-10-12
+13,5,1,564,25,USD,6,24,167,12,2026-10-24,1,27,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+14,5,3,704,60,USD,10,10,229,4,2026-10-16,1,22,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+15,5,4,434,25,USD,5,20,80,35,2026-11-16,1,0,arrives after planning window,1,smb_purchasing_20261012_v1,2026-10-12
+16,6,1,635,25,USD,6,24,186,12,2026-10-24,1,31,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+17,6,2,535,25,USD,12,48,217,22,2026-11-03,1,18,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+18,6,3,775,60,USD,10,10,68,4,2026-10-16,1,6,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+19,7,1,706,25,USD,6,24,205,12,2026-10-24,1,34,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+20,7,2,606,25,USD,12,48,236,22,2026-11-03,1,19,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+21,7,4,576,25,USD,5,20,118,35,2026-11-16,1,0,arrives after planning window,1,smb_purchasing_20261012_v1,2026-10-12
+22,8,1,777,25,USD,6,24,224,12,2026-10-24,1,37,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+23,8,3,917,60,USD,10,10,106,4,2026-10-16,1,10,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+24,8,4,647,25,USD,5,20,137,35,2026-11-16,1,0,arrives after planning window,1,smb_purchasing_20261012_v1,2026-10-12
+25,9,1,848,25,USD,6,24,63,12,2026-10-24,1,10,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+26,9,2,748,25,USD,12,48,94,22,2026-11-03,1,7,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+27,9,3,988,60,USD,10,10,125,4,2026-10-16,1,12,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+28,10,1,919,25,USD,6,24,82,12,2026-10-24,1,13,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+29,10,2,819,25,USD,12,48,113,22,2026-11-03,1,9,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+30,10,4,789,25,USD,5,20,175,35,2026-11-16,1,0,arrives after planning window,1,smb_purchasing_20261012_v1,2026-10-12
+31,11,1,990,25,USD,6,24,101,12,2026-10-24,1,16,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+32,11,3,1130,60,USD,10,10,163,4,2026-10-16,1,16,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+33,11,4,860,25,USD,5,20,194,35,2026-11-16,1,0,arrives after planning window,1,smb_purchasing_20261012_v1,2026-10-12
+34,12,1,1061,25,USD,6,24,120,12,2026-10-24,1,20,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+35,12,2,961,25,USD,12,48,151,22,2026-11-03,1,12,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+36,12,3,1201,60,USD,10,10,182,4,2026-10-16,1,18,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+37,13,1,1132,25,USD,6,24,139,12,2026-10-24,1,23,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+38,13,2,1032,25,USD,12,48,170,22,2026-11-03,1,14,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+39,13,4,1002,25,USD,5,20,232,35,2026-11-16,1,0,arrives after planning window,1,smb_purchasing_20261012_v1,2026-10-12
+40,14,1,1203,25,USD,6,24,158,12,2026-10-24,1,26,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+41,14,3,1343,60,USD,10,10,220,4,2026-10-16,1,22,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+42,14,4,1073,25,USD,5,20,71,35,2026-11-16,1,0,arrives after planning window,1,smb_purchasing_20261012_v1,2026-10-12
+43,15,1,1274,25,USD,6,24,177,12,2026-10-24,1,29,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+44,15,2,1174,25,USD,12,48,208,22,2026-11-03,1,17,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+45,15,3,1414,60,USD,10,10,239,4,2026-10-16,1,23,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+46,16,1,1345,25,USD,6,24,196,12,2026-10-24,1,32,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+47,16,2,1245,25,USD,12,48,227,22,2026-11-03,1,18,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+48,16,4,1215,25,USD,5,20,109,35,2026-11-16,1,0,arrives after planning window,1,smb_purchasing_20261012_v1,2026-10-12
+49,17,1,1416,25,USD,6,24,215,12,2026-10-24,1,35,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+50,17,3,1556,60,USD,10,10,97,4,2026-10-16,1,9,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+51,17,4,1286,25,USD,5,20,128,35,2026-11-16,1,0,arrives after planning window,1,smb_purchasing_20261012_v1,2026-10-12
+52,18,1,1487,25,USD,6,24,234,12,2026-10-24,1,39,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+53,18,2,1387,25,USD,12,48,85,22,2026-11-03,1,7,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+54,18,3,1627,60,USD,10,10,116,4,2026-10-16,1,11,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+55,19,1,1558,25,USD,6,24,73,12,2026-10-24,1,12,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+56,19,2,1458,25,USD,12,48,104,22,2026-11-03,1,8,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+57,19,4,1428,25,USD,5,20,166,35,2026-11-16,1,0,arrives after planning window,1,smb_purchasing_20261012_v1,2026-10-12
+58,20,1,1629,25,USD,6,24,92,12,2026-10-24,1,15,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+59,20,3,1769,60,USD,10,10,154,4,2026-10-16,1,15,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+60,20,4,1499,25,USD,5,20,185,35,2026-11-16,1,0,arrives after planning window,1,smb_purchasing_20261012_v1,2026-10-12
+61,21,1,1700,25,USD,6,24,111,12,2026-10-24,1,18,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+62,21,2,1600,25,USD,12,48,142,22,2026-11-03,1,11,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+63,21,3,1840,60,USD,10,10,173,4,2026-10-16,1,17,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+64,22,1,1771,25,USD,6,24,130,12,2026-10-24,1,21,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+65,22,2,1671,25,USD,12,48,161,22,2026-11-03,1,13,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+66,22,4,1641,25,USD,5,20,223,35,2026-11-16,1,0,arrives after planning window,1,smb_purchasing_20261012_v1,2026-10-12
+67,23,1,1842,25,USD,6,24,149,12,2026-10-24,1,24,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+68,23,3,1982,60,USD,10,10,211,4,2026-10-16,1,21,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+69,23,4,1712,25,USD,5,20,62,35,2026-11-16,1,0,arrives after planning window,1,smb_purchasing_20261012_v1,2026-10-12
+70,24,1,1913,25,USD,6,24,168,12,2026-10-24,1,28,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+71,24,2,1813,25,USD,12,48,199,22,2026-11-03,1,16,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+72,24,3,2053,60,USD,10,10,230,4,2026-10-16,1,23,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+73,25,1,1984,25,USD,6,24,187,12,2026-10-24,1,31,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+74,25,2,1884,25,USD,12,48,218,22,2026-11-03,1,18,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+75,25,4,1854,25,USD,5,20,100,35,2026-11-16,1,0,arrives after planning window,1,smb_purchasing_20261012_v1,2026-10-12
+76,26,1,2055,25,USD,6,24,206,12,2026-10-24,1,34,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+77,26,3,2195,60,USD,10,10,88,4,2026-10-16,1,8,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+78,26,4,1925,25,USD,5,20,119,35,2026-11-16,1,0,arrives after planning window,1,smb_purchasing_20261012_v1,2026-10-12
+79,27,1,326,25,USD,6,24,225,12,2026-10-24,1,37,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+80,27,2,226,25,USD,12,48,76,22,2026-11-03,1,6,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+81,27,3,466,60,USD,10,10,107,4,2026-10-16,1,10,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+82,28,1,397,25,USD,6,24,64,12,2026-10-24,1,10,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+83,28,2,297,25,USD,12,48,95,22,2026-11-03,1,7,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+84,28,4,267,25,USD,5,20,157,35,2026-11-16,1,0,arrives after planning window,1,smb_purchasing_20261012_v1,2026-10-12
+85,29,1,468,25,USD,6,24,83,12,2026-10-24,1,13,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+86,29,3,608,60,USD,10,10,145,4,2026-10-16,1,14,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+87,29,4,338,25,USD,5,20,176,35,2026-11-16,1,0,arrives after planning window,1,smb_purchasing_20261012_v1,2026-10-12
+88,30,1,539,25,USD,6,24,102,12,2026-10-24,1,17,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+89,30,2,439,25,USD,12,48,133,22,2026-11-03,1,11,eligible,1,smb_purchasing_20261012_v1,2026-10-12
+90,30,3,679,60,USD,10,10,164,4,2026-10-16,1,16,eligible,1,smb_purchasing_20261012_v1,2026-10-12

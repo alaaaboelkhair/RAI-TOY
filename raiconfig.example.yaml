@@ -1,0 +1,25 @@
+# Copy to raiconfig.yaml. Set credentials locally; never commit the filled file.
+default_connection: sf
+connections:
+  sf:
+    type: snowflake
+    authenticator: programmatic_access_token
+    token: {{ env_var('SNOWFLAKE_TOKEN') }}
+    account: {{ env_var('SNOWFLAKE_ACCOUNT') }}
+    warehouse: ALAA_RELAPP_WH
+    user: {{ env_var('SNOWFLAKE_USER') }}
+    role: RAI_DEFAULT_ROLE
+model:
+  path: model.py
+deployment:
+  schema: ALAA_RELAPP_PERSISTENCE.BACKORDER_MODEL
+  meta_schema: ALAA_RELAPP_PERSISTENCE.BACKORDER_MODEL_META
+  role: RAI_DEFAULT_ROLE
+  auto_deploy: false
+  suspend_after_mins: 30
+  schedules:
+    demo:
+      interval_s: 0
+  outputs:
+    schedule: demo
+    type: table
