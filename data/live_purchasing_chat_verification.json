@@ -1,0 +1,21 @@
+{
+  "status": "PASSED",
+  "run_id": "ceff7c8a-4745-4600-86c2-7f86dbf3f095",
+  "product_rows": 30,
+  "order_lines": 45,
+  "summary": {
+    "attention": "6 products need buyer attention",
+    "cost_usd": 36922.0,
+    "demand_shortfall": 49,
+    "early_shortfall": 15,
+    "product": "Synthetic demo; 2026-10-12 to 2026-11-11; OPTIMAL",
+    "purchase_pieces": 3226,
+    "record_type": "summary",
+    "run_id": "ceff7c8a-4745-4600-86c2-7f86dbf3f095",
+    "safety_shortfall": 15,
+    "supplier_orders": "[]"
+  },
+  "fresh_tool_called": true,
+  "truncated": false,
+  "complete_final_answer": true
+}

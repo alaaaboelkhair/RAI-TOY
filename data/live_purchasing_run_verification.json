@@ -1,0 +1,34 @@
+{
+  "status": "PASSED",
+  "run": {
+    "run_id": "71c60d32-ab91-4239-ac86-f96c0bba904b",
+    "started_at_utc": "2026-10-14T18:33:21.638587+00:00",
+    "finished_at_utc": "2026-10-14T18:37:38.836514+00:00"
+  },
+  "execution": "fresh RAI logic + prescriptive solve; no saved decisions loaded",
+  "solver_status": "OPTIMAL",
+  "solver_version": "HiGHS_1.13.1",
+  "verification": "ontology_readback_and_independent_oracle",
+  "order_lines": 45,
+  "product_count": 30,
+  "offer_count": 90,
+  "summary": {
+    "PLAN_ID": 1,
+    "NAME": "30-day purchasing plan",
+    "STATUS": "OPTIMAL",
+    "SOLVER_VERSION": "HiGHS_1.13.1",
+    "CURRENCY": "USD",
+    "WINDOW_END": "2026-11-11",
+    "PRODUCT_COUNT": 30,
+    "SUPPLIER_COUNT": 4,
+    "WAREHOUSE_COUNT": 1,
+    "TOTAL_COST_CENTS": 3692200,
+    "PURCHASE_QTY": 3226,
+    "DEMAND_SHORTFALL_QTY": 49,
+    "SAFETY_SHORTFALL_QTY": 15,
+    "EXCEPTION_PRODUCT_COUNT": 6,
+    "IS_SYNTHETIC": 1,
+    "SCENARIO_ID": "smb_purchasing_20261012_v1",
+    "SNAPSHOT_DATE": "2026-10-12"
+  }
+}

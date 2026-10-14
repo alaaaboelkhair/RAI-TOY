@@ -4746,6 +4746,7 @@
     "status": "OPTIMAL",
     "objective_cents": 3692200,
     "solver_version": "HiGHS_1.13.1",
+    "verification": "ontology_readback_and_independent_oracle",
     "orders": [
       {
         "offer_id": 2,

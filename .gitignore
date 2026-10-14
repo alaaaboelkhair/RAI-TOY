@@ -24,12 +24,10 @@ shared_model.py.*.bak
 .codex/
 .agents/
 
-# Publish only the current purchasing demo and its synthetic artifacts
-legacy/
-optimize_replenishment.py
-replenishment_model.py
-seed_supply_chain.py
+# Keep only the current synthetic fixture and compact verification evidence
 data/*
-!data/smb_*.csv
-!data/smb_*.json
-!data/smb_*.txt
+!data/smb_purchasing_results.json
+!data/live_purchasing_run_verification.json
+!data/live_purchasing_agent_response.txt
+!data/live_purchasing_chat_verification.json
+!data/dynamic_ontology_deployment_verification.json

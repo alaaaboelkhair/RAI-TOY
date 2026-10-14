@@ -6,7 +6,7 @@ connections:
     authenticator: programmatic_access_token
     token: {{ env_var('SNOWFLAKE_TOKEN') }}
     account: {{ env_var('SNOWFLAKE_ACCOUNT') }}
-    warehouse: ALAA_RELAPP_WH
+    warehouse: RAI_XS
     user: {{ env_var('SNOWFLAKE_USER') }}
     role: RAI_DEFAULT_ROLE
 model:
@@ -22,4 +22,4 @@ deployment:
       interval_s: 0
   outputs:
     schedule: demo
-    type: table
+    type: view

@@ -6,96 +6,95 @@ from relationalai.config import create_config, SnowflakeConnection
 from relationalai.agent.cortex import (
     CortexAgentManager, DeploymentConfig,
     CortexAgentApi, http_client,
+    QueryCatalog,
 )
 from relationalai.agent.cortex.diagnostics import deployer_setup_sql
 
 ROOT = Path(__file__).resolve().parent
 DOMAIN_INSTRUCTIONS = """
-You are the Purchasing Assistant for a small distributor's synthetic demo.
-Use RAI tools for all data answers. Prefer purchasing_summary, purchasing_worklist,
-recommended_purchases, buyer_exceptions, incoming_orders, supplier_options, and purchasing_comparison.
-The active scenario is smb_purchasing_20261012_v1: 30 products, four suppliers,
-one Main Warehouse, snapshot October 12, 2026, planning end November 11, 2026.
-All operational data, names, prices, forecasts and incoming orders are synthetic.
-Begin every answer using scenario data by explicitly saying this is a synthetic
-demo. Never describe these inputs as actual company records or real commitments.
-Product.source_sku is only a reference to the original backorder dataset; it does
-not imply the generated operational quantities or descriptive names are real.
-All quantities are pieces; pack_count is purchasing packs and pack_size is pieces
-per pack. Prices are USD cents per piece, including inbound freight for landed cost.
-Remaining demand excludes previously allocated demand; reservations are already
-deducted from available inventory. Early obligations are INCLUDED in remaining
-demand, not added again. Safety stock is an ending-stock target.
-Existing receipts count only when confirmed and dated after the snapshot and on
-or before window end. Overdue receipts require reconfirmation, cancelled orders
-and arrivals after the window do not count. Never count aggregate original in-transit.
-Approved supplier offers need a known lead time, on-time arrival, adequate capacity,
-whole packs and MOQ. Lead_time_days=-1 means missing; never zero or a valid delivery.
-Read eligibility_reason for why an offer cannot be used. Minimum quantities and
-capacity are in pieces, not packs. Each order is made as of the snapshot date.
-The plan was solved separately with RAI/HiGHS and independently checked by an exact
-per-product cost oracle. It maximizes achievable coverage before minimizing landed
-cost, respecting capacity, pack multiples and MOQ. No shared supplier capacity is
-assumed. OPTIMAL is a solver status under those assumptions, not proof of complete
-coverage. Always report demand shortfall, safety shortfall and early-date exceptions.
-Projected ending stock can be negative to represent unmet demand, not physical stock.
-This is one 30-day end-window optimization, not daily stockout protection. Early
-obligations that cannot be covered are buyer exceptions to expedite or renegotiate.
-There are no warehouse transfers in this active scenario. The old 12-SKU 90-day
-network demo and its 4.05% savings are legacy results, not this purchasing plan.
-These are fixed snapshot, precomputed recommendations. Tools read materialized
-outputs, do not solve live, issue purchase orders or modify operational systems.
-If tools fail, report the failure. State selected limits for bounded lists.
-Use purchasing_comparison for the simple feasible rule-based baseline: visit
-eligible offers by landed unit price (product plus freight), breaking ties by
-supplier ID then offer ID. Buy the minimum packs needed from that offer, respecting
-MOQ and capped capacity; proceed to the next offer until maximum feasible coverage
-is reached. Both strategies use identical inputs, arrival eligibility and per-product
-coverage; shortfalls and early-date limitations still apply. The baseline is a
-heuristic, not an optimal solve. Report savings as baseline cost minus optimized
-cost and savings percent as 100*savings/baseline cost. The optimizer is unchanged.
-Products are independent in this formulation: no shared supplier capacity, budget,
-or cross-product allocation tradeoffs. Savings come from supplier selection and
-pack/MOQ order sizing WITHIN each product. Never attribute savings to cross-product
-coordination or say buying more expensively on one product benefits another.
+You answer purchasing questions for a synthetic demo, not actual company records.
+For purchases, priorities, supplier selection, quantities, costs or shortages,
+call compute_purchasing_plan exactly once first. It reads current raw facts and
+runs fresh RAI logic and RAI/HiGHS integer optimization. No saved plan is available.
+Use its returned rows to answer directly in concise prose and a small table.
+Do not call chart, skill, comparison or other tools after a successful planning
+result. Do not retry a timed-out solve in the same turn; explain the failure.
+The summary row contains totals and a fresh run ID; the 30 product rows contain
+supplier_orders JSON arrays [supplier,pieces,packs,arrival_date,landed_cost_USD].
+Never add summary totals to product totals. Prioritize demand and early shortages,
+then replenishment needs, and name suppliers and quantities for key purchases.
+Always state synthetic demo and the returned planning dates. The current dataset
+has one warehouse and a fixed October 12–November 11, 2026 planning window; 'next
+month' does not shift those dates or create new forecasts. Data updates within
+that scenario are read on each invocation. Unsupported dimensions fail explicitly.
+Quantities are pieces; packs times pack size gives pieces. Costs include freight.
+Confirmed receipts count only after snapshot and through window end. Overdue
+receipts need reconfirmation. Approved offers require known lead time, on-time
+arrival, MOQ, capacity and whole packs. Remaining demand already excludes allocated
+demand; reservations reduce available stock. Safety stock is an ending target.
+The optimizer covers maximum achievable requirements then minimizes landed cost.
+Products have independent capacities: no shared supplier budget or constraints.
+OPTIMAL does not mean all demand can be covered. Report demand and safety gaps,
+early-delivery exceptions and overdue receipts requiring buyer attention.
+This is an end-window model, not a daily stockout guarantee. No tool places orders,
+publishes calculated tables or changes operational records. Other catalog queries
+are raw product/receipt/supplier facts only. If the planner fails, report that.
 """.strip()
+
+
+class LivePlanningCatalog(QueryCatalog):
+    """Expose one live planner and supporting facts; no saved planning tools."""
+    def get_available_queries(self):
+        metadata=super().get_available_queries()
+        visible={'compute_purchasing_plan','find_products','incoming_orders',
+                 'supplier_options'}
+        metadata['queries']={key:value for key,value in metadata['queries'].items() if key in visible}
+        metadata['query_instructions']=(
+            'For any purchasing plan, priorities, supplier order quantities, costs or shortages, '
+            'execute {"id":"compute_purchasing_plan","args":{}} first. '
+            'This is the only planning query. The other queries provide product lookup, '
+            'incoming-order and supplier facts. '
+            'Execute catalog queries with an id and args; dynamic queries are unavailable.')
+        return metadata
 
 
 def init_tools():
     from model import model
     import query
+    from purchasing_reasoners import compute_purchasing_plan
     from relationalai.agent.cortex import QueryCatalog, ToolRegistry
     return ToolRegistry().add(
         model=model,
         description="Small-business purchasing: 30 synthetic products, four suppliers, one warehouse, "
-                    "dated incoming orders, practical pack/MOQ sourcing and validated recommendations.",
-        queries=QueryCatalog(query.purchasing_summary, query.purchasing_worklist,
-                             query.recommended_purchases, query.buyer_exceptions,
-                             query.incoming_orders, query.supplier_options, query.purchasing_comparison, model=model),
+                    "current input facts and on-demand RAI purchasing optimization.",
+        queries=LivePlanningCatalog(query.incoming_orders, query.supplier_options,
+                                   query.find_products, compute_purchasing_plan),
     )
 
 
 def agent_config(args):
     # Construct the typed deployment spec from YAML; never upload connection secrets.
     config = create_config()
-    model_deployment = config.deployment.model_copy(update={"auto_deploy": False})
     return DeploymentConfig(
         agent_name=args.name,
         database="ALAA_RELAPP_PERSISTENCE",
         schema="BACKORDER_AGENT",
         agent_schema=args.agent_schema,
-        warehouse="ALAA_RELAPP_WH",
-        model_name="BackorderDemo",
+        warehouse=config.get_connection(SnowflakeConnection).warehouse,
+        model_name="PurchasingAssistant",
         llm=args.llm,
         allow_preview=True,
-        sproc_config_overrides={"deployment": model_deployment},
+        # Cortex's generic tools enforce a maximum of 600 seconds.
+        query_timeout_s=600,
+        sproc_config_overrides={"deployment": None},
     )
 
 
 def imports():
     # Explicit single-file imports avoid packaging the environment or YAML credentials.
     return [(str(ROOT / f"{name}.py"), name)
-            for name in ("model", "query", "deploy_agent")]
+            for name in ("model", "query", "deploy_agent", "purchasing_ontology", "purchasing_sources",
+                         "purchasing_reasoners", "purchasing_optimization", "purchasing_demo")]
 
 
 def customize_agent(session, config, spec):

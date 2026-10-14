@@ -1,5 +1,0 @@
-SUPPLIER_ID,NAME,IS_SYNTHETIC,SCENARIO_ID,SNAPSHOT_DATE
-1,Demo Regional Supply,1,smb_purchasing_20261012_v1,2026-10-12
-2,Demo Value Wholesale,1,smb_purchasing_20261012_v1,2026-10-12
-3,Demo Express Industrial,1,smb_purchasing_20261012_v1,2026-10-12
-4,Demo Specialty Distribution,1,smb_purchasing_20261012_v1,2026-10-12

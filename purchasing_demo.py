@@ -4,7 +4,7 @@ import csv
 import json
 import math
 from collections import defaultdict
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 from relationalai.config import SnowflakeConnection, create_config
@@ -142,7 +142,8 @@ def validate_inputs(data):
         assert o['PACK_SIZE'] > 0 and o['MINIMUM_ORDER_QTY'] > 0 and o['UNIT_COST_CENTS'] > 0
         assert o['CONFIRMED_CAPACITY_QTY'] >= 0
         arrival = SNAPSHOT+timedelta(days=o['LEAD_TIME_DAYS']) if o['LEAD_TIME_DAYS']>=0 else None
-        assert o['EXPECTED_ARRIVAL_DATE'] == arrival
+        assert o['EXPECTED_ARRIVAL_DATE'] == arrival, (
+            'offer arrival mismatch',o['OFFER_ID'],o['EXPECTED_ARRIVAL_DATE'],arrival)
         capacity_packs = o['CONFIRMED_CAPACITY_QTY']//o['PACK_SIZE']
         expected = capacity_packs if o['IS_APPROVED']==1 and arrival is not None and arrival<=END \
                    and capacity_packs*o['PACK_SIZE']>=o['MINIMUM_ORDER_QTY'] else 0
@@ -188,53 +189,9 @@ def oracle_cost(data, product_id, target):
 
 
 def solve(data):
-    from relationalai.semantics import Model, Integer, Float, inspect
-    from relationalai.semantics.std import aggregates as aggs
-    from relationalai.semantics.reasoners.prescriptive import Problem
-    config = create_config()
-    config.deployment = None
-    m = Model('SMBPurchasingSolve', config=config)
-    need = m.Concept('Need', identify_by={'id': Integer})
-    offer = m.Concept('Offer', identify_by={'id': Integer})
-    for c, fields in [(need, ['required', 'shortfall']),
-                      (offer, ['product_id', 'pack', 'min_packs', 'max_packs', 'cost'])]:
-        for field in fields:
-            setattr(c, field, m.Property(f'{c} has {Float:{field}}'))
-    m.define(need.new(m.data([dict(id=n['PRODUCT_ID'], required=float(n['REQUIRED_QTY']),
-                                 shortfall=float(n['UNAVOIDABLE_SHORTFALL_QTY'])) for n in data['needs']]).to_schema()))
-    m.define(offer.new(m.data([dict(id=o['OFFER_ID'], product_id=float(o['PRODUCT_ID']),
-                                  pack=float(o['PACK_SIZE']), min_packs=float(math.ceil(o['MINIMUM_ORDER_QTY']/o['PACK_SIZE'])),
-                                  max_packs=float(o['ELIGIBLE_PACKS']),
-                                  cost=float(o['UNIT_COST_CENTS']+o['FREIGHT_CENTS_PER_UNIT']))
-                                 for o in data['offers']]).to_schema()))
-    offer.packs = m.Property(f'{offer} orders {Float:packs} packs')
-    offer.used = m.Property(f'{offer} has {Float:used} activation')
-    print(inspect.schema(m), flush=True)
-    problem = Problem(m, Float)
-    packs = problem.solve_for(offer.packs, type='int', lower=0, upper=offer.max_packs, name=['packs', offer.id])
-    problem.solve_for(offer.used, type='bin', lower=0, upper=1, name=['active', offer.id])
-    quantity = aggs.sum(offer.packs*offer.pack).per(need).where(offer.product_id == need.id)
-    requirements = [m.require(quantity+need.shortfall >= need.required),
-                    m.require(offer.packs <= offer.max_packs*offer.used),
-                    m.require(offer.packs >= offer.min_packs*offer.used)]
-    coverage = problem.satisfy(requirements[0], name=['coverage', need.id])
-    problem.satisfy(requirements[1], name=['capacity', offer.id])
-    problem.satisfy(requirements[2], name=['moq', offer.id])
-    problem.minimize(aggs.sum(offer.packs*offer.pack*offer.cost))
-    assert len(m.select(packs).to_df()) == len(data['offers'])
-    assert len(m.select(coverage).to_df()) == 30
-    problem.solve('highs', time_limit_sec=120, relative_gap_tolerance=0.0)
-    info = problem.solve_info()
-    info.display()
-    if info.termination_status != 'OPTIMAL':
-        raise RuntimeError(f'{info.termination_status}: {info.error}')
-    problem.verify(*requirements)
-    rows = m.where(offer.packs > 0.5).select(offer.id.alias('offer_id'), offer.packs.alias('packs')).to_df().to_dict('records')
-    for r in rows:
-        assert abs(float(r['packs'])-round(float(r['packs']))) < 1e-6
-    result = dict(status=info.termination_status, objective_cents=int(round(info.objective_value)),
-                  solver_version=str(info.solver_version), orders=[dict(offer_id=int(r['offer_id']), packs=int(round(float(r['packs'])))) for r in rows])
-    return result
+    """Execute the ontology-native formulation; validate and publish separately."""
+    from purchasing_optimization import solve_purchasing
+    return solve_purchasing(data)
 
 
 def lowest_price_first(data):
@@ -295,7 +252,7 @@ def evaluate_orders(data, orders):
     return rows
 
 
-def add_baseline(data):
+def add_baseline(data, *, write_audit=True):
     baseline_orders = lowest_price_first(data)
     baseline = evaluate_orders(data,baseline_orders)
     optimized = evaluate_orders(data,data['recommendations'])
@@ -324,11 +281,12 @@ def add_baseline(data):
                   OPTIMIZED_COST_CENTS=o['TOTAL_COST_CENTS'],SAVINGS_CENTS=b['TOTAL_COST_CENTS']-o['TOTAL_COST_CENTS'],
                   BASELINE_PURCHASE_QTY=b['PURCHASE_QTY'],OPTIMIZED_PURCHASE_QTY=o['PURCHASE_QTY'])
              for b,o in zip(baseline,optimized)]
-    (ROOT/'data/smb_baseline_product_comparison.json').write_text(json.dumps(audit,indent=2)+'\n')
+    if write_audit:
+        (ROOT/'data/smb_baseline_product_comparison.json').write_text(json.dumps(audit,indent=2)+'\n')
     print('Price-first baseline validated: same per-product coverage; costs reconstructed',flush=True)
 
 
-def finish(data, result):
+def finish(data, result, *, write_artifacts=True):
     validate_inputs(data)
     offers = {o['OFFER_ID']: o for o in data['offers']}
     quantities, costs = defaultdict(int), defaultdict(int)
@@ -379,7 +337,7 @@ def finish(data, result):
                          EXCEPTION_PRODUCT_COUNT=sum(n['BUYER_EXCEPTION']!='none' for n in data['needs']),
                          IS_SYNTHETIC=1, SCENARIO_ID=SCENARIO, SNAPSHOT_DATE=SNAPSHOT)]
     print('Independent exact cost oracle, pack/MOQ/capacity and balances verified for all 30 products', flush=True)
-    add_baseline(data)
+    add_baseline(data,write_audit=write_artifacts)
 
 
 TABLES = {'products': 'SMB_PRODUCTS_V1', 'suppliers': 'SMB_SUPPLIERS_V1', 'warehouses': 'SMB_WAREHOUSES_V1',
@@ -414,7 +372,8 @@ def publish(session, data):
 
 def restore_dates(value):
     if isinstance(value, list): return [restore_dates(v) for v in value]
-    if isinstance(value, dict): return {k: date.fromisoformat(v) if k.endswith('DATE') or k=='WINDOW_END' else restore_dates(v)
+    if isinstance(value, dict): return {k: (date.fromisoformat(v) if isinstance(v,str) else v.date() if isinstance(v,datetime) else v)
+                                      if k.endswith('DATE') or k=='WINDOW_END' else restore_dates(v)
                                       for k,v in value.items() if v is not None} | {k:None for k,v in value.items() if v is None}
     return value
 
@@ -423,6 +382,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--publish', action='store_true')
     parser.add_argument('--publish-saved', action='store_true')
+    parser.add_argument('--solve-saved', action='store_true', help='Solve the saved input snapshot using the current formulation')
     args = parser.parse_args()
     session = create_config().get_session(SnowflakeConnection)
     try:
@@ -430,6 +390,11 @@ def main():
             artifact = json.loads((ROOT/'data/smb_purchasing_results.json').read_text())
             data, result = restore_dates(artifact['data']), artifact['solve']
             assert result['status'] == 'OPTIMAL'
+        elif args.solve_saved:
+            artifact = json.loads((ROOT/'data/smb_purchasing_results.json').read_text())
+            data = restore_dates(artifact['data'])
+            validate_inputs(data)
+            result = solve(data)
         else:
             ids = [int(r[0]) for r in session.sql('SELECT SKU FROM ALAA_DEMO_DATA.SUPPLY_CHAIN.BACKORDERS WHERE NATIONAL_INV>=0 AND FORECAST_3_MONTH>0 ORDER BY SKU LIMIT 30').collect()]
             data = generate(ids)

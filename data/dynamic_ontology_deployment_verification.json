@@ -1,0 +1,25 @@
+{
+  "status": "PASSED",
+  "schema": "ALAA_RELAPP_PERSISTENCE.BACKORDER_MODEL",
+  "tables": [],
+  "views": [
+    "INCOMINGORDER",
+    "INCOMINGORDER_IS_OVERDUE",
+    "INVENTORYPOSITION",
+    "PRODUCT",
+    "PRODUCT_HAS_EARLY_SHORTAGE",
+    "PRODUCT_HAS_SHORTAGE",
+    "PRODUCT_INCOMING_ORDERS",
+    "PRODUCT_OFFERS",
+    "PRODUCT_REQUIRES_ATTENTION",
+    "PRODUCT_STOCK_POSITIONS",
+    "SUPPLIER",
+    "SUPPLIEROFFER",
+    "SUPPLIEROFFER_ELIGIBLE",
+    "SUPPLIEROFFER_IS_SELECTED",
+    "WAREHOUSE"
+  ],
+  "tasks": [],
+  "calculated_output_tables": 0,
+  "automatic_refresh_tasks_running": false
+}

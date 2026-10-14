@@ -1,0 +1,79 @@
+
+
+This is a **synthetic demo** powered by RelationalAI. The optimizer ran fresh RAI/HiGHS optimization and returned an **OPTIMAL** plan for the planning window **October 12 – November 11, 2026**.
+
+---
+
+## Plan Summary
+
+| Metric | Value |
+|---|---|
+| Total pieces to purchase | 3,226 |
+| Total landed cost (incl. freight) | $36,922 |
+| Demand shortfall (uncoverable) | 49 pieces |
+| Early-delivery shortfall | 15 pieces |
+| Safety-stock shortfall | 15 pieces |
+| Products needing buyer attention | 6 |
+
+---
+
+## 🚨 Priority Items Requiring Buyer Attention
+
+**1. Safety Glasses — CRITICAL**
+- **49 pieces of demand cannot be filled** and **15 pieces of safety stock** will be missed.
+- No approved supplier has sufficient on-time capacity. **Buyer intervention is required** — you'll need to source a new supplier or negotiate emergency terms.
+
+**2. Nitrile Gloves — Early Obligation at Risk**
+- **15 units are committed before Oct 15**, but no supplier can deliver that fast. Buyer must **expedite or revise the commitment**.
+- An overdue incoming order has been excluded until its arrival is reconfirmed.
+- The optimizer still placed 48 pcs with Demo Value Wholesale (arriving Nov 3, $98).
+
+**3–6. Overdue Receipts Need Reconfirmation**
+These products have existing incoming orders that are **past due and excluded** from the plan until the supplier reconfirms arrival:
+- **Flat washers** · **Measuring tapes** · **Shipping labels** · **Water filters**
+
+---
+
+## Full Purchase Plan by Product
+
+| Product | Pieces | Cost (USD) | Supplier(s) & Quantities |
+|---|---|---|---|
+| Packing tape | 234 | $1,340 | Demo Regional Supply 30 pcs (Oct 24) · Demo Value Wholesale 204 pcs (Nov 3) |
+| Air filters | 208 | $3,474 | Demo Regional Supply 66 pcs (Oct 24) · Demo Value Wholesale 132 pcs (Nov 3) · Demo Express Industrial 10 pcs (Oct 16) |
+| Work gloves | 206 | $1,301 | Demo Regional Supply 156 pcs (Oct 24) · Demo Express Industrial 50 pcs (Oct 16) |
+| AA batteries | 204 | $3,584 | Demo Regional Supply 84 pcs (Oct 24) · Demo Express Industrial 120 pcs (Oct 16) |
+| Large cartons | 186 | $1,648 | Demo Regional Supply 78 pcs (Oct 24) · Demo Value Wholesale 108 pcs (Nov 3) |
+| Marker pens | 184 | $3,845 | Demo Regional Supply 174 pcs (Oct 24) · Demo Express Industrial 10 pcs (Oct 16) |
+| M6 bolts | 172 | $1,921 | Demo Regional Supply 72 pcs (Oct 24) · Demo Express Industrial 100 pcs (Oct 16) |
+| Cable ties | 162 | $2,087 | Demo Regional Supply 30 pcs (Oct 24) · Demo Value Wholesale 132 pcs (Nov 3) |
+| Paper towels | 162 | $3,123 | Demo Regional Supply 30 pcs (Oct 24) · Demo Value Wholesale 132 pcs (Nov 3) |
+| Small cartons | 158 | $1,330 | Demo Regional Supply 54 pcs (Oct 24) · Demo Value Wholesale 84 pcs (Nov 3) · Demo Express Industrial 20 pcs (Oct 16) |
+| Hand soap | 154 | $2,858 | Demo Value Wholesale 144 pcs (Nov 3) · Demo Express Industrial 10 pcs (Oct 16) |
+| Shop brushes | 138 | $670 | Demo Regional Supply 30 pcs (Oct 24) · Demo Value Wholesale 108 pcs (Nov 3) |
+| M8 nuts | 132 | $1,621 | Demo Regional Supply 132 pcs (Oct 24) |
+| Flat washers | 126 | $1,541 | Demo Regional Supply 30 pcs (Oct 24) · Demo Value Wholesale 96 pcs (Nov 3) |
+| Measuring tapes | 108 | $585 | Demo Regional Supply 78 pcs (Oct 24) · Demo Express Industrial 30 pcs (Oct 16) |
+| M6 nuts | 108 | $1,142 | Demo Value Wholesale 108 pcs (Nov 3) |
+| Replacement blades | 108 | $372 | Demo Regional Supply 24 pcs (Oct 24) · Demo Value Wholesale 84 pcs (Nov 3) |
+| Ear plugs | 96 | $497 | Demo Regional Supply 96 pcs (Oct 24) |
+| Extension leads | 66 | $998 | Demo Regional Supply 66 pcs (Oct 24) |
+| LED bulbs | 60 | $890 | Demo Value Wholesale 60 pcs (Nov 3) |
+| Dust masks | 60 | $208 | Demo Value Wholesale 60 pcs (Nov 3) |
+| Nitrile gloves | 48 | $98 | Demo Value Wholesale 48 pcs (Nov 3) |
+| Shipping labels | 48 | $385 | Demo Regional Supply 48 pcs (Oct 24) |
+| Electrical tape | 40 | $594 | Demo Regional Supply 30 pcs (Oct 24) · Demo Express Industrial 10 pcs (Oct 16) |
+| Stretch film | 24 | $175 | Demo Regional Supply 24 pcs (Oct 24) |
+| Water filters | 24 | $431 | Demo Regional Supply 24 pcs (Oct 24) |
+| Cleaning wipes | 10 | $204 | Demo Express Industrial 10 pcs (Oct 16) |
+| Safety glasses | 0 | — | ⚠️ No eligible supplier — buyer must intervene |
+| M8 bolts | 0 | — | No purchase needed |
+| Utility knives | 0 | — | No purchase needed |
+
+---
+
+## Key Takeaways
+
+- **Immediate action needed** on **Safety Glasses** — no supplier can cover the 49-piece demand gap. This is the only product with unmet demand.
+- **Nitrile Gloves** have an early delivery commitment (by Oct 15) that no supplier can meet — consider expediting or renegotiating.
+- **Four products** (Flat washers, Measuring tapes, Shipping labels, Water filters) have **overdue shipments** that were excluded from this plan; reconfirm arrival dates with those suppliers.
+- Three supplier delivery windows are in play: **Demo Express Industrial** (Oct 16, fastest), **Demo Regional Supply** (Oct 24), and **Demo Value Wholesale** (Nov 3, largest volume).
